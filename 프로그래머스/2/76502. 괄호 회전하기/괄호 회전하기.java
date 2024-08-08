@@ -1,50 +1,36 @@
 import java.util.*;
 
 class Solution {
-
     public int solution(String s) {
+        String sb = s + s;
         int answer = 0;
-        // 문자열을 리스트에 저장
-        List<Character> sList = new LinkedList<>();
-        for (char c : s.toCharArray()) {
-            sList.add(c);
-        }
-
-        int l = s.length();
-        for (int i = 0; i < l; i++) {
-            // 현재 리스트가 유효한 괄호 문자열인 경우 정답을 증가시킴
-            if (isValid(sList)) {
-                answer += 1;
-            }
-            // 문자열을 한 칸 회전시킴
-            sList.add(0, sList.get(sList.size() - 1));
-            sList.remove(sList.size() - 1);
+        //✅ 문자열의 길이만큼 반복
+        for (int i = 0; i < s.length(); i++) {
+		        //✅ 문자열을 회전시킨다.
+		        //✅ 문자열이 유효한지 확인
+		        //✅ 유효하다면 answer를 1 증가시킨다.
+            if (isValid(sb.substring(i, s.length() + i))) answer++;
         }
         return answer;
     }
-
-    // 주어진 리스트가 유효한 괄호 문자열인지 확인하는 메서드
-    private boolean isValid(List<Character> sList) {
-        Deque<Character> stack = new ArrayDeque<>(); // 스택을 이용하여 괄호 매칭 확인
-        HashMap<Character, Character> map = new HashMap<>(); // 매칭 정보를 담은 해시맵
-        map.put('(', ')');
-        map.put('[', ']');
-        map.put('{', '}');
-
-        for (char c : sList) {
-            if (map.containsKey(c)) { // 여는 괄호일 경우 스택에 push
-                stack.push(c);
-            } else { // 닫는 괄호일 경우
-                if (stack.isEmpty()) { // 스택이 비어있으면 불일치
-                    return false;
-                }
-                if (map.get(stack.peek()) != c) { // 스택의 맨 위 괄호와 일치하지 않으면 불일치
-                    return false;
-                }
-                stack.pop(); // 일치하면 스택에서 pop
-            }
+    
+    private boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        
+        for (char current : s.toCharArray()) {
+		            if (current == '(' ||  current == '{' ||  current == '[') {
+		                stack.push(current);
+		            } else {
+		            	  if (stack.isEmpty()) return false;
+		             
+		                char target = stack.pop();
+		                if ((target == '(' && current != ')') || 
+		                    (target == '{' && current != '}') || 
+		                    (target == '[' && current != ']')) {
+		                        return false;
+		                }
+		            }
         }
-        return stack.isEmpty(); // 스택이 비어있으면 모든 괄호가 정상적으로 매칭됨
+        return stack.isEmpty();
     }
-
 }

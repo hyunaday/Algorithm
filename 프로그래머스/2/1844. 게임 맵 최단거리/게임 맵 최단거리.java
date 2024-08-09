@@ -11,9 +11,9 @@ class Solution {
         // BFS 탐색 시작점 추가 : (0,0)과 거리를 큐에 추가
         queue.add(new int[] {0,0,1}); // (n, m, dis)
         visited[0][0] = true; // 시작위치 : 방문으로 표시
-        // 4방향 배열, 상하좌우
-        int[] dr = {0,1,0,-1}; // 열
-        int[] dc = {-1,0,1,0}; // 행
+        // 4방향 배열, 좌하우상
+        int[] dr = {0,1,0,-1}; // 행
+        int[] dc = {-1,0,1,0}; // 열
         
         // 큐가 비어있지 않은 동안 BFS 탐색
         while (!queue.isEmpty()) {

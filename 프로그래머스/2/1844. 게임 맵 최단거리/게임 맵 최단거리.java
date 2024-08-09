@@ -9,7 +9,7 @@ class Solution {
         Queue<int[]>queue = new ArrayDeque<>(); // BFS 탐색을 위한 큐
         
         // BFS 탐색 시작점 추가 : (0,0)과 거리를 큐에 추가
-        queue.add(new int[] {0,0,1}); // (n, m, dis)
+        queue.add(new int[] {0,0,1}); // (r, c, dis)
         visited[0][0] = true; // 시작위치 : 방문으로 표시
         // 4방향 배열, 좌하우상
         int[] dr = {0,1,0,-1}; // 행

@@ -2,43 +2,37 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-
-	static int N;
-	static int[][] schedule;
-	static int result;
-    
-	public static void main(String[] args) throws IOException {
+	
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		N = Integer.parseInt(br.readLine()); // N까지만 일 함
-		schedule = new int[N][2];
-		for(int i=0; i<N; i++) {
+		int N = Integer.parseInt(br.readLine()); // N까지만 일 함
+		
+		int[] T = new int[N+1];
+		int[] P = new int[N+1];
+		int[] DP = new int[N+2];
+		
+		for(int i=1; i<=N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-			schedule[i][0] = Integer.parseInt(st.nextToken()); // 상담 하는데 걸리는 일 수
-			schedule[i][1] = Integer.parseInt(st.nextToken()); // 돈
+			T[i] = Integer.parseInt(st.nextToken()); // 상담 하는데 걸리는 일 수
+			P[i] = Integer.parseInt(st.nextToken()); // 돈
 		}
 		
-		result = 0;
-		// 0일 부터 시작함
-		dfs(0, 0);
+		for(int i = N; i > 0; i--) {
+			int next = i + T[i]; // 다음 날짜
+			
+			if(next > N + 1) { // 일할 수 있는 날짜를 넘어가는 경우
+				// 일을 하지 못하므로 바로 다음 DP값(더 앞쪽의 날짜)로 설정
+				DP[i] = DP[i + 1];
+			} else { // 일할 수 있는 날짜인 경우
+				// 1. 일하지 않았을 때(DP[i + 1])
+				// 2. 일 했을 때 총 벌 수 있는 금액(P[i] + DP[next])
+				// 위 두 경우 중 더 큰 값을 DP에 넣어준다.
+				DP[i] = Math.max(DP[i + 1], P[i] + DP[next]);
+			}
+		}
 		
-		System.out.println(result);
+		System.out.println(DP[1]);
 	}
-	
-	static void dfs(int idx, int pay) {
-		if(idx >= N) {
-			result = Math.max(pay, result);
-			return;
-		}
-		
-		if(idx + schedule[idx][0] <= N) { // 상담을 끝마칠 수 있다면 -> 상담이 끝난 날짜와 상담비 넣음
-			dfs(idx + schedule[idx][0], pay + schedule[idx][1]);
-		} else { // 상담을 끝마칠 수 없다면 -> 상담이 끝난 날짜만 넘겨준다(탈출 조건으로 써먹음)
-			dfs(idx + schedule[idx][0], pay);
-		}
-		
-		// 이어서 상담하지 않고 날짜를 띄워서 새로운 날짜를 입력 (0일부터 마지막 날짜까지 다 훑을 수 있음)
-		dfs(idx + 1, pay);
-	}
-	
+
 }
